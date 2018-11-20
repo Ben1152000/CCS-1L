@@ -7,13 +7,14 @@
 #include <random>
 
 class RandomPlayer : public Player {
-private:
-    std::mt19937_64 random;
 
-public:
-    RandomPlayer() : random(std::random_device{}()) {}
-    virtual void move(
-        State s, int value, int &i, int &j, bool invalid) override;
+    private:
+        std::mt19937_64 random;
+
+    public:
+        RandomPlayer() : random(std::random_device{}()) {}
+        virtual void move(State s, int value, int &i, int &j, bool invalid) override;
+        virtual std::string type() override {return "RandomPlayer";}
 };
 
 #endif

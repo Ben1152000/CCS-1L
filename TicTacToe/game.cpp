@@ -18,7 +18,9 @@ int Game::play() {
                 /* std::cout << "Player 1 turn" << std::endl; */
                 this->p->move(State(this->state), 1, i, j, !valid);
                 /* std::cout << "Possible move: " << i << " " << j; */
-                valid = (this->state).validMove(i, j, 1);
+                if (i < 3 && j < 3 && i >= 0 && j >= 0) {
+                    valid = (this->state).validMove(i, j, 1);
+                } else { valid = false; }
                 /* std::cout << " valid=" << valid << std::endl; */
             } while (!valid);
             (this->state).set(i, j, 1); // actually make the move
@@ -33,7 +35,9 @@ int Game::play() {
                 /* std::cout << "Player -1 turn" << std::endl; */
                 this->q->move(State(this->state), -1, i, j, !valid);
                 /* std::cout << "Possible move: " << i << " " << j; */
-                valid = (this->state).validMove(i, j, -1);
+                if (i < 3 && j < 3 && i >= 0 && j >= 0) {
+                    valid = (this->state).validMove(i, j, -1);
+                } else { valid = false; }
                 /* std::cout << " valid=" << valid << std::endl; */
             } while (!valid);
             (this->state).set(i, j, -1); // actually make the move

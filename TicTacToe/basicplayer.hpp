@@ -15,7 +15,7 @@ class BasicPlayer : public Player {
     public:
         BasicPlayer() : random(std::random_device{}()) {}
         virtual void move(State s, int value, int &i, int &j, bool invalid) override;
-
+        virtual std::string type() override {return "BasicPlayer";}
 };
 
 #endif

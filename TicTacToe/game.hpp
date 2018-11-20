@@ -11,13 +11,14 @@ class Game {
 
 private:
     State state;
-    std::unique_ptr<Player> p, q;
+    Player* p;
+    Player* q;
 
 public:
-    Game(std::unique_ptr<Player> p, std::unique_ptr<Player> q) :
-        p(std::move(p)),
-        q(std::move(q)) {}
-
+    Game(Player &p, Player &q) {
+        this->p = &p;
+        this->q = &q;
+    };
     int play(); // actually play the game, return win state of board
     std::string string() const; // returns a string representation of the board
 };
