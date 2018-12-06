@@ -17,6 +17,18 @@ class State:
             return False
         self.board[column][index - 1] = value
         return True
+    """
+    def undoableMove(self, column, value):
+        index = 0
+        while index < len(self.board[column]) and self.board[column][index] == 0:
+            index += 1
+        if index == 0:
+            return False
+        self.board[column][index - 1] = value
+        return (column, value)
+    
+    def undoMove(self, column, value)
+    """
 
     def gameOver(self):
         for col in self.board:

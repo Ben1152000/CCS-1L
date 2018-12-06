@@ -1,6 +1,6 @@
 
 from board import State
-from player import *
+from player import Human, Player, Breadth
 from copy import copy
 import random
 
@@ -26,6 +26,7 @@ class Game:
                     move = (random.randint(0, 6), 2)
                 self.state.makeMove(*move)
             self.turn += 1
+        print self.state
         return self.state.winState()
 
 if __name__ == "__main__":

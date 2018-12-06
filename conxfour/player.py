@@ -1,6 +1,6 @@
 
 import random, string
-from copy import copy
+from copy import deepcopy
 from board import State
 
 class Player:
@@ -18,45 +18,55 @@ class Human:
         print ""
         return int(number)
 
-class Regressor():
+class Breadth:
 
-    def __init__(self, regressor=None):
-        if regressor:
-            self.weightings = copy(regressor.weightings)
-            self.name = regressor.name
-        else:
-            self.weightings = [[self.randnum() for i in range(7)] for i in range(7 * 6 * 3)]
-            self.name = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
-        self.mutate(10)
-    
-    def randnum(self):
-        return random.choice([-1, 1]) * random.random()
-
-    def mutate(self, times):
-        for time in range(times):
-            i = random.randint(0, len(self.weightings) - 1)
-            j = random.randint(0, len(self.weightings[i]) - 1)
-            self.weightings[i][j] = self.randnum()
+    DEPTH = 3
 
     def move(self, state, turn):
-        total = [0 for i in range(7)]
-        for col in range(len(state.board)):
-            for row in range(len(state.board[col])):
-                weight = self.weightings[col * len(state.board[col]) * 3 + row * 3 + state.board[col][row]]
-                total = [total[i] + weight[i] for i in range(len(total))]
-        return total.index(max(total))
+        results = []
+        for move in range(len(state.board)):
+            if not state.validMove(move, turn):
+                results.append(-1000)
+            else:
+                movedState = deepcopy(state)
+                movedState.makeMove(move, turn)
+                if movedState.gameOver():
+                    if movedState.winState() == turn: return move
+                    else: results.append(-1)
+                else:
+                    results.append(-self.result(movedState, turn % 2 + 1, self.DEPTH))
+        maximum = max(results)
+        moves = []
+        for move in range(len(results)):
+            if results[move] == maximum:
+                moves.append(move)
+        return random.choice(moves)
 
-    def __str__(self):
-        return self.name
+    def result(self, state, turn, depth): # return (move, heuristic)
+        if depth == 1: return 0
+        results = []
+        for move in range(len(state.board)):
+            if not state.validMove(move, turn):
+                results.append(-1000)
+            else:
+                movedState = deepcopy(state)
+                movedState.makeMove(move, turn)
+                if state.gameOver():
+                    if state.winState() == turn: results.append(1)
+                    elif state.winState() == 0: results.append(0)
+                    else: results.append(-1)
+                else:
+                    results.append(-self.result(movedState, turn % 2 + 1, depth - 0.5))
+        return max(results)
+
 
 if __name__ == "__main__":
-    r = Regressor()
-    for i in range(100):
-        r = Regressor(r)
-
+    b = Breadth()
     s = State()
-    moves = [(4, 1), (3, 2), (4, 1), (4, 2), (2, 1)]
-    for move in moves:
-        s.makeMove(*move)
-
-    print (r.move(s, 2), 2)
+    s.makeMove(3, 1)
+    s.makeMove(3, 1)
+    #s.makeMove(3, 1)
+    s.makeMove(4, 2)
+    s.makeMove(4, 2)
+    s.makeMove(4, 2)
+    print b.move(s, 1)
